@@ -1,23 +1,35 @@
 #!/usr/bin/env python
 
-from os import system,path,listdir
+from os import system,path,listdir,geteuid
 from shutil import move,copy
+import subprocess
+import sys
 
 def space(n):
   for i in range(n):
     print ""
 
-system('clear')
+def sudo_check():
+  if geteuid() == 0:
+    print "We're Root!"
+    print "Moving on..."
+  else:
+    print("We're not Root")
+    subprocess.call(['/usr/bin/sudo', './setup.py'])
+    exit(1)
+
+
+#system('clear')
 space(1)
 print "This is the setup program for Try_Linux!"
 space(1)
 print "	This setup program needs root access to install"
 print "	and setup all necissary files."
-print "	You will be promted for admin privileges now."
+print "	I will be check for admin privileges now."
 space(2)
 raw_input("Press Enter to continue.")
-system('sudo cat /dev/null')
-system('clear')
+sudo_check()
+#system('clear')
 print "Checking dependencies..."
 virt = system('which virsh')
 php = system('which php')
@@ -33,7 +45,7 @@ else:
   print "	Check Passed! Moving on"
 space(1)
 raw_input("Press Enter when you're ready to begin!")
-system('clear')
+#system('clear')
 space(5)
 print "	The VM storage pool is where the images that libvirt"
 print "	creates. If you are unsure run the command:"
@@ -67,8 +79,23 @@ if not path.isdir(vm_space + '../config.d'):
 if not path.isdir(vm_space + '../MID'):
   system('sudo mkdir ' + vm_space + '../MID')
 raw_input('Completed Sucsessfully! Press Enter to continue')
-copy('../vm_space/recycle.sh', vm_space + '../')
-system('clear')
+if not path.exists(vm_space + '../recycle.sh'):
+  copy('../vm_space/recycle.sh', vm_space + '../')
+crontab = open("/etc/crontab","r")
+crontab = crontab.read()
+count = 0
+for line in crontab:
+  count = count + 1
+  pre = str(count) + " " + str(line)
+  print pre
+  print '\n'
+
+with open("/etc/crontab", "a") as cron:
+  cron.write("\n")
+  cron.write("*/15 * * * * root /bin/rm -f /srv/storage/virtual_machines/config.d/*" + "\n")
+  cron.write("*/5 * * * * root /srv/storage/virtual_machines/recycle.sh" + "\n")
+
+#system('clear')
 space(2)
 print "	all done"
 space(2)
