@@ -33,6 +33,8 @@ sudo_check()
 print "Checking dependencies..."
 virt = system('which virsh')
 php = system('which php')
+print virt
+print php
 if virt == "" or php == "":
   space(5)
   print "	Dependency Check failed!"
