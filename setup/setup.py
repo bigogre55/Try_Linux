@@ -2,6 +2,7 @@
 
 from os import system,path,listdir,geteuid
 from shutil import move,copy
+import gzip
 import subprocess
 import sys
 
@@ -33,8 +34,6 @@ sudo_check()
 print "Checking dependencies..."
 virt = system('which virsh')
 php = system('which php')
-print 'virt is ' + str(virt)
-print 'php is ' + str(php)
 if virt > 0 or php > 0:
   space(5)
   print "	Dependency Check failed!"
@@ -78,26 +77,49 @@ if vm_space[len(vm_space) - 1] != "/":
   vm_space += "/"
 if not path.isdir(vm_space + '../config.d'):
   system('sudo mkdir ' + vm_space + '../config.d')
+  print "Creating config.d directory"
+else:
+  print "config.d dir is present"
 if not path.isdir(vm_space + '../MID'):
   system('sudo mkdir ' + vm_space + '../MID')
+  print "Creating MID directory"
+else:
+  print "MID dir is present"
+
 raw_input('Completed Sucsessfully! Press Enter to continue')
 if not path.exists(vm_space + '../recycle.sh'):
   copy('../vm_space/recycle.sh', vm_space + '../')
-crontab = open("/etc/crontab","r")
-crontab = crontab.read()
-count = 0
-for line in crontab:
-  count = count + 1
-  pre = str(count) + " " + str(line)
-  print pre
-  print '\n'
-
-with open("/etc/crontab", "a") as cron:
-  cron.write("\n")
-  cron.write("*/15 * * * * root /bin/rm -f /srv/storage/virtual_machines/config.d/*" + "\n")
-  cron.write("*/5 * * * * root /srv/storage/virtual_machines/recycle.sh" + "\n")
-
+else:
+  print "recycle.sh is present"
+if not path.exists('/etc/cron.d/Try_Linux'):
+  print "Creating cron file"
+  system('touch /etc/cron.d/Try_Linux')
+  with open("/etc/cron.d/Try_Linux", "w") as cron:
+    cron.write("#-------------------------------------------------------#")
+    cron.write("#Try_Linux cleanup for virtual machines and config files#")
+    cron.write("#-------------------------------------------------------#")
+    cron.write("\n")
+    cron.write("*/15 * * * * root /bin/rm -f /srv/storage/virtual_machines/config.d/*" + "\n")
+    cron.write("*/5 * * * * root /srv/storage/virtual_machines/recycle.sh" + "\n")
+else:
+  print "cron file is present"
 #system('clear')
+space(2)
+vm_list = listdir(vm_space)
+if vm_list == []:
+  print "You have no base images!"
+  print "Moving base Debian image to " + vm_space
+  system('touch ' + vm_space + 'Debian.img')
+  deb_img = gzip.open("Debian.img.gz", "rb")
+  file = open(vm_space + "Debian.img", "wb")
+  file.write(deb_img.read())
+  deb_img.close()
+  file.close()
+else:
+  print "your current virtual machines are:"
+  for i in range(len(vm_list)):
+    print vm_list[i]
+
 space(2)
 print "	all done"
 space(2)
