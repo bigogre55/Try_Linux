@@ -1,5 +1,8 @@
 <html>
 <head>
+<?php
+include(vars.php);
+?>
 <style>
 body {
 	background-color: #CBC7BE;

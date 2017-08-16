@@ -5,7 +5,7 @@ from shutil import move,copy
 import gzip
 import subprocess
 import sys
-import urllib
+import urllib.request
 
 def space(n):
   for i in range(n):
@@ -21,10 +21,17 @@ def sudo_check():
     exit(1)
 
 def get_img():
-  web = urllib2.urlopen('https://s3-us-west-2.amazonaws.com/jacobjeffers/git/Debian.img.gz')
+  print('Downloading Debian image..')
+  web = urllib.request.urlopen('https://s3-us-west-2.amazonaws.com/jacobjeffers/git/Debian.img.gz')
   deb_img = web.read()
-  with open(vm_sapce + 'Debian.img', 'wb') as file:
+  with open(vm_space + 'Debian.img.gz', 'wb') as file:
     file.write(deb_img)
+  print('img has been downloaded; extracting..')
+  extract_img()
+
+def extract_img():
+  system('gunzip -qf ' + vm_space + 'Debian.img.gz')
+  print('img has been extracted')
 
 
 #system('clear')
