@@ -21,18 +21,35 @@ def sudo_check():
     exit(1)
 
 def get_img():
-  print('Downloading Debian image..')
-  web = urllib.request.urlopen('https://s3-us-west-2.amazonaws.com/jacobjeffers/git/Debian.img.gz')
+  print('Downloading base image..')
+  web = urllib.request.urlopen('https://s3-us-west-2.amazonaws.com/jacobjeffers/git/centos.img.gz')
   deb_img = web.read()
-  with open(vm_space + 'Debian.img.gz', 'wb') as file:
+  with open(vm_space + 'centos.img.gz', 'wb') as file:
     file.write(deb_img)
   print('img has been downloaded; extracting..')
   extract_img()
 
 def extract_img():
-  system('gunzip -qf ' + vm_space + 'Debian.img.gz')
+  system('gunzip -qf ' + vm_space + 'centos.img.gz')
   print('img has been extracted')
 
+
+def get_pool():
+  pools = []
+  pool = []
+  import re
+  pool_list = subprocess.check_output('virsh pool-list', shell=True)
+  pool_list = pool_list.decode().split(" ")
+  for name in pool_list:
+    if len(name) > 1:
+      pools.append(name)
+  i = 4
+  for a in range(len(pools) -1):
+    if pools[i] == "\n\n":
+      break
+    pool.append(pools[i])
+    i = i + 3
+  print(pool)
 
 #system('clear')
 space(1)
@@ -129,8 +146,10 @@ else:
   for i in range(len(vm_list)):
     print(vm_list[i])
   download = input('Do you want to download the Debian image?(y/n) ')
-  if download == 'yes' or download == 'y':
+  if download == 'yes' or download == 'y' or download == "Y":
     get_img()
+
+system('virsh pool-refresh --pool ' + $pool)
 space(2)
 print("	all done")
 space(2)
