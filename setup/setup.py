@@ -145,7 +145,7 @@ else:
 #system('clear')
 input('Completed Sucsessfully! Press Enter to continue')
 space(2)
-refresh_now = True #testing without Download
+refresh_now = False #testing without Download
 vm_list = listdir(vm_space)
 if vm_list == []:
   print("You have no base images!")
@@ -159,7 +159,7 @@ else:
   download = input('Do you want to download the CentOS image?(y/n) ')
   if download == 'yes' or download == 'y' or download == "Y":
     get_img()
-    refresh_now == True
+    refresh_now = True
 
 if refresh_now == True:
   r = get_pool_list()
