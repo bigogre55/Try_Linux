@@ -33,6 +33,7 @@ $files = scandir($dir);
 //echo $responce;
 //print_r($files);
 foreach ($files as $name) {
+	$name = basename($name, ".img");
 	if ($name == "." || $name == "..") {
 		echo ""; //do nothing
 	} else {
