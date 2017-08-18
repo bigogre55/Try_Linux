@@ -1,5 +1,8 @@
 <html>
 <head>
+<?php
+include("vars.php");
+?>
 <style>
 body {
 	background-color: #CBC7BE;
@@ -23,10 +26,21 @@ body {
 <div class="choose" id="table">
 <form id="pick" action="build.php" onsubmit="please_wait()">
 <h1>Choose a Distribution to try:</h1><br>
-	<input type="radio" name="dist" value="fedora" checked>Fedora<br>
-	<input type="radio" name="dist" value="ubuntu">Ubuntu<br>
-	<input type="radio" name="dist" value="centos">CentOs<br>
-	<input type="radio" name="dist" value="debian">Debian<br><br><hr><br>
+<?php
+$responce = shell_exec('virsh pool-refresh --pool base_images');
+$files = array();
+$files = scandir($dir);
+//echo $responce;
+//print_r($files);
+foreach ($files as $name) {
+	$name = basename($name, ".img");
+	if ($name == "." || $name == "..") {
+		echo ""; //do nothing
+	} else {
+		echo "  <input type=\"radio\" name=\"dist\" value=\"$name\" checked>$name<br>\n";
+	}
+}
+?>
 Enter a Profile name:<br><br>
         <input type="text" name="name"><br><br>
         <input type="button" value="Launch" onclick="please_wait();go()"><br>
