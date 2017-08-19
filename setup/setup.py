@@ -110,7 +110,8 @@ def auto_get_pool_info():
     pool = str(pool_list[c])
   elif len(pool_list) == 1:
     pool = pool_list
-  responce = subprocess.check_output('virsh pool-dumpxml --pool ' + str(pool) + ' | grep path', shell = True)
+    pool = str(pool)
+  responce = subprocess.check_output('virsh pool-dumpxml --pool ' + pool + ' | grep path', shell = True)
   responce = str(responce)
   vm_space = responce[12:-10]
   return(vm_space)
