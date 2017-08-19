@@ -77,18 +77,20 @@ def get_storage_pool_info():
     print("	OK!!")
     return(vm_space)
 
-def auto_get_pool_info():
+def pools():
   pools = []
-  pool_list = []
   import re
   responce = subprocess.check_output('virsh pool-list', shell=True)
   responce = responce.decode().split(" ")
   for field in responce:
     if len(field) > 1:
       pools.append(field)
-  print(pools)
-  input()
-  if len(pools) == 0:
+  return pools
+
+def auto_get_pool_info():
+  pool_list = []
+  pools = pools()
+  if len(pools) < 4:
     print('there are no storage pools; creating one..')
     vm_space = build_pool()
   i = 4
