@@ -105,7 +105,16 @@ def auto_get_pool_info():
   responce = subprocess.check_output('virsh pool-dumpxml --pool ' + pool + ' | grep path', shell = True)
   responce = str(responce)
   vm_space = responce[12:-10]
+  else:
+    print('there are no storage pools; creating one..')
+    vm_space = build_pool()
   return(vm_space)
+
+def build_pool();
+  subprocess.call(['sudo','virsh','pool-define','../vm_space/new_pool.xml'])
+  subprocess.call(['sudo','virsh','pool-start','TryLinux_images'])
+  subprocess.call(['sudo','virsh','pool-autostart','TryLinux_images'])
+
 
 def install_dep():
   subprocess.call(['sudo','apt','-y','install','php7.0','libvirt-bin','qemu-kvm','virtinst','bridge-utils','cpu-checker'])
