@@ -40,10 +40,10 @@ def check_img():
   print(old_md5)
   if old_md5 == new_md5:
     print('The image is good')
-    input()
   else:
-    print('The image did not download correctly')
-    input()
+    print('The image did not download correctly; Trying again')
+    system('rm -f ' + vmspace + 'TryLinux_centos.img.gz')
+  get_img()
 
 def extract_img():
   system('gunzip -qf ' + vm_space + 'TryLinux_centos.img.gz')
@@ -77,6 +77,39 @@ def get_storage_pool_info():
     print("	OK!!")
     return(vm_space)
 
+def auto_get_pool_info():
+  pools = []
+  pool_list = []
+  import re
+  responce = subprocess.check_output('virsh pool-list', shell=True)
+  responce = responce.decode().split(" ")
+  for field in responce:
+    if len(field) > 1:
+      pools.append(field)
+  i = 4
+  for a in range(len(pools) -1):
+    if pools[i] == "\n\n":
+      break
+    pool_list.append(pools[i])
+    i = i + 3
+  if len(pool_list) > 1:
+    print('There is more than one storage pool: ')
+    for i in range(len(pool_list)):
+      a = i + 1
+      print(str(a) + ": " + pool_list[i])
+    c = input('Which one Should I use:')
+    c = int(c) - 1
+    pool = str(pool_list[c])
+  elif len(pool_list) == 1:
+    pool = str(pool_list)
+  responce = subprocess.check_output('virsh pool-dumpxml --pool ' + pool + ' | grep path', shell = True)
+  responce = str(responce)
+  vm_space = responce[12:-10]
+  return(vm_space)
+
+def install_deb():
+  subprocess.call(['sudo','apt','install','php7.0','libvirt-bin','qemu-kvm','virtinst','bridge-utils','cpu-checker'])
+
 #system('clear')
 space(1)
 print("This is the setup program for Try_Linux!")
@@ -90,6 +123,7 @@ sudo_check()
 #system('clear')
 print("Checking dependencies...")
 dep = 0
+install = False
 while(dep < 1):
   virt = system('which virsh')
   php = system('which php')
@@ -111,17 +145,20 @@ space(1)
 input("Press Enter when you're ready to begin!")
 #system('clear')
 space(5)
-print("	The VM storage pool is where the images that libvirt")
-print("	creates. If you are unsure run the command:")
-print("		$: virsh pool-list")
-print("	This will list the current storage pools. If there is")
-print("	only one run the following command and replace <pool>")
-print("	with the name of the storage pool")
-print("		$: virsh pool-xmldump <pool> | grep path")
-print("	This will output the path to the storage pool. You")
-print("	can copy and paste it here.")
-space(1)
-vm_space = get_storage_pool_info();
+if install == False:
+  print("	The VM storage pool is where the images that libvirt")
+  print("	creates. If you are unsure run the command:")
+  print("		$: virsh pool-list")
+  print("	This will list the current storage pools. If there is")
+  print("	only one run the following command and replace <pool>")
+  print("	with the name of the storage pool")
+  print("		$: virsh pool-xmldump <pool> | grep path")
+  print("	This will output the path to the storage pool. You")
+  print("	can copy and paste it here.")
+  space(1)
+  vm_space = get_storage_pool_info()
+else:
+  vm_space = auto_get_pool_info()
 print("Making Directory stucture and installing files")
 if vm_space[len(vm_space) - 1] != "/":
   vm_space += "/"
