@@ -90,10 +90,10 @@ def pool_set():
 def auto_get_pool_info():
   pool_list = []
   pools = pool_set()
-  print(pools)
   if pools[len(pools) - 1] == '\n-------------------------------------------\n\n':
     print('there are no storage pools; creating one..')
     vm_space = build_pool()
+  pools = pool_set()
   i = 4
   for a in range(len(pools) -1):
     if pools[i] == "\n\n":
