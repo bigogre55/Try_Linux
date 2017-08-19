@@ -86,6 +86,8 @@ def auto_get_pool_info():
   for field in responce:
     if len(field) > 1:
       pools.append(field)
+  print(pools)
+  input()
   if len(pools) == 0:
     print('there are no storage pools; creating one..')
     vm_space = build_pool()
