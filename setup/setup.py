@@ -110,7 +110,7 @@ def auto_get_pool_info():
   vm_space = responce[12:-10]
   return(vm_space)
 
-def build_pool();
+def build_pool():
   subprocess.call(['sudo','virsh','pool-define','../vm_space/new_pool.xml'])
   subprocess.call(['sudo','virsh','pool-start','TryLinux_images'])
   subprocess.call(['sudo','virsh','pool-autostart','TryLinux_images'])
