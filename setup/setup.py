@@ -90,7 +90,8 @@ def pool_set():
 def auto_get_pool_info():
   pool_list = []
   pools = pool_set()
-  if len(pools) < 4:
+  print(pools)
+  if pools[len(pools)] == '':
     print('there are no storage pools; creating one..')
     vm_space = build_pool()
   i = 4
