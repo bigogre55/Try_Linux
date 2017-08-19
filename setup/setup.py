@@ -86,6 +86,9 @@ def auto_get_pool_info():
   for field in responce:
     if len(field) > 1:
       pools.append(field)
+  if len(pools) == 0:
+    print('there are no storage pools; creating one..')
+    vm_space = build_pool()
   i = 4
   for a in range(len(pools) -1):
     if pools[i] == "\n\n":
@@ -102,9 +105,6 @@ def auto_get_pool_info():
     pool = str(pool_list[c])
   elif len(pool_list) == 1:
     pool = str(pool_list)
-  else:
-    print('there are no storage pools; creating one..')
-    vm_space = build_pool()
   responce = subprocess.check_output('virsh pool-dumpxml --pool ' + pool + ' | grep path', shell = True)
   responce = str(responce)
   vm_space = responce[12:-10]
