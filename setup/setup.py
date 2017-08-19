@@ -26,34 +26,38 @@ def get_img():
   deb_img = web.read()
   with open(vm_space + 'TryLinux_centos.img.gz', 'wb') as file:
     file.write(deb_img)
+  print('image has been downloaded; checking integrity..')
+  check_img()
   print('img has been downloaded; extracting..')
   extract_img()
+
+def check_img():
+  import hashlib
+  new_md5 = hashlib.md5(open(vm_space + 'TryLinux_centos.img.gz', 'rb').read()).hexdigest()
+  new_md5 = str(new_md5)
+  old_md5 = 'f3e3bd285dbc727848991917e2e9a8c1'
+  print(new_md5)
+  print(old_md5)
+  if old_md5 == new_md5:
+    print('The image is good')
+    input()
+  else:
+    print('The image did not download correctly')
+    input()
 
 def extract_img():
   system('gunzip -qf ' + vm_space + 'TryLinux_centos.img.gz')
   print('img has been extracted')
 
 def refresh_pool(l):
-  for i in range(len(l)):
-    system('virsh pool-refresh --pool ' + l[i])
+  system('virsh pool-refresh --pool ' + str(l))
 
-
-def get_pool_list():
-  pools = []
-  pool_list = []
-  import re
-  responce = subprocess.check_output('virsh pool-list', shell=True)
-  responce = responce.decode().split(" ")
-  for field in responce:
-    if len(field) > 1:
-      pools.append(field)
-  i = 4
-  for a in range(len(pools) -1):
-    if pools[i] == "\n\n":
-      break
-    pool_list.append(pools[i])
-    i = i + 3
-  return(pool_list)
+def get_pool_name():
+  vms = listdir(vm_space)
+  responce = subprocess.check_output('virsh vol-pool ' + vm_space + vms[0], shell=True)
+  responce = str(responce)
+  responce = responce[2:-5]
+  return responce
 
 def get_storage_pool_info():
   vm_space = input("Where is your VM storage pool: ")
@@ -85,18 +89,24 @@ input("Press Enter to continue.")
 sudo_check()
 #system('clear')
 print("Checking dependencies...")
-virt = system('which virsh')
-php = system('which php')
-if virt > 0 or php > 0:
-  space(5)
-  print("	Dependency Check failed!")
-  space(2)
-  print("	Please make sure libvirt and PHP7.0 are installed")
-  space(2)
-  exit(1)
-else:
-  space(5)
-  print("	Check Passed! Moving on")
+dep = 0
+while(dep < 1):
+  virt = system('which virsh')
+  php = system('which php')
+  if virt > 0 or php > 0:
+    space(5)
+    print("	Dependency Check failed!")
+    space(2)
+    print("	Please make sure libvirt and PHP7.0 are installed")
+    space(2)
+    install = input('Do you want me to install Libvirt and PHP?(y/n) ')
+    if install == "y" or install == "Y":
+      install_dep()
+      dep = dep + 1
+  else:
+    space(5)
+    print("	Check Passed! Moving on")
+    dep = dep + 1
 space(1)
 input("Press Enter when you're ready to begin!")
 #system('clear')
@@ -128,6 +138,7 @@ else:
 
 if not path.exists(vm_space + '../recycle.sh'):
   copy('../vm_space/recycle.sh', vm_space + '../')
+  print("Copying recycle.sh to " + vm_space)
 else:
   print("recycle.sh is present")
 if not path.exists('/etc/cron.d/Try_Linux'):
@@ -162,7 +173,7 @@ else:
     refresh_now = True
 
 if refresh_now == True:
-  r = get_pool_list()
+  r = get_pool_name()
   refresh_pool(r)
 space(2)
 print("	all done")
