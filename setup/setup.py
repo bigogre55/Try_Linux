@@ -108,7 +108,7 @@ def auto_get_pool_info():
   return(vm_space)
 
 def install_dep():
-  subprocess.call(['sudo','apt','install','php7.0','libvirt-bin','qemu-kvm','virtinst','bridge-utils','cpu-checker'])
+  subprocess.call(['sudo','apt','-y','install','php7.0','libvirt-bin','qemu-kvm','virtinst','bridge-utils','cpu-checker'])
 
 #system('clear')
 space(1)
