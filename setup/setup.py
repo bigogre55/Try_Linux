@@ -43,7 +43,7 @@ def check_img():
   else:
     print('The image did not download correctly; Trying again')
     system('rm -f ' + vmspace + 'TryLinux_centos.img.gz')
-  get_img()
+    get_img()
 
 def extract_img():
   system('gunzip -qf ' + vm_space + 'TryLinux_centos.img.gz')
@@ -111,6 +111,7 @@ def auto_get_pool_info():
   elif len(pool_list) == 1:
     pool = pool_list
     pool = str(pool)
+    pool = pool[2:-2]
   responce = subprocess.check_output('virsh pool-dumpxml --pool ' + pool + ' | grep path', shell = True)
   responce = str(responce)
   vm_space = responce[12:-10]
@@ -138,7 +139,7 @@ sudo_check()
 #system('clear')
 print("Checking dependencies...")
 dep = 0
-install = True
+install = False
 while(dep < 1):
   virt = system('which virsh')
   php = system('which php')
