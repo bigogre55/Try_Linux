@@ -91,7 +91,7 @@ def auto_get_pool_info():
   pool_list = []
   pools = pool_set()
   print(pools)
-  if pools[len(pools)] == '':
+  if pools[len(pools) - 1] == '\n-------------------------------------------\n\n':
     print('there are no storage pools; creating one..')
     vm_space = build_pool()
   i = 4
@@ -137,7 +137,7 @@ sudo_check()
 #system('clear')
 print("Checking dependencies...")
 dep = 0
-install = False
+install = True
 while(dep < 1):
   virt = system('which virsh')
   php = system('which php')
