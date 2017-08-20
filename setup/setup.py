@@ -96,6 +96,8 @@ def pool_set():
   for field in responce:
     if len(field) > 1:
       pools.append(field)
+  print(pools)
+  input()
   pool_list = pool_list_fix(pools)
   return pool_list
 
