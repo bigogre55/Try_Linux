@@ -36,8 +36,8 @@ def check_img():
   new_md5 = hashlib.md5(open(vm_space + 'TryLinux_centos.img.gz', 'rb').read()).hexdigest()
   new_md5 = str(new_md5)
   old_md5 = 'f3e3bd285dbc727848991917e2e9a8c1'
-  print(new_md5)
-  print(old_md5)
+#  print(new_md5)
+#  print(old_md5)
   if old_md5 == new_md5:
     print('The image is good')
   else:
@@ -57,6 +57,7 @@ def refresh_pool(l):
 def get_pool_name():
   vms = listdir(vm_space)
   for a in range(len(vms) - 1):
+    input('get_pool_name last 4 are ' + vms[a][-4:])
     if vms[a][-4:] == '.img':
       responce = subprocess.check_output('sudo virsh vol-pool ' + vm_space + vms[a], shell=True)
       responce = str(responce)
@@ -83,7 +84,7 @@ def get_storage_pool_info():
 
 def pool_list_fix(old):
   i = 4
-  print('first new is ' + str(new))
+#  print('first new is ' + str(new))
   global new
   if not i >= len(old):
     new = []
@@ -92,8 +93,8 @@ def pool_list_fix(old):
         break
     new.append(old[i])
     i = i + 3
-  print('new in fix is ' + str(new))
-  input()
+#  print('new in fix is ' + str(new))
+#  input()
   return new
 
 def pool_set():
@@ -104,8 +105,8 @@ def pool_set():
   for field in responce:
     if len(field) > 1:
       pools.append(field)
-  print('pools in pool_set are ' + str(pools))
-  input()
+#  print('pools in pool_set are ' + str(pools))
+#  input()
   pool_list = pool_list_fix(pools)
   return pool_list
 
@@ -240,7 +241,8 @@ if vm_list == []:
 else:
   print("your current virtual machines are:")
   for i in range(len(vm_list)):
-    print(vm_list[i])
+    if not vm_list[i][0] == ".":
+      print(vm_list[i])
   download = input('Do you want to download the CentOS image?(y/n) ')
   if download == 'yes' or download == 'y' or download == "Y":
     get_img()
