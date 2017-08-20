@@ -79,6 +79,15 @@ def get_storage_pool_info():
     print("	OK!!")
     return(vm_space)
 
+def pool_list_fix(old):
+  i = 4
+  for a in range(len(old) -1):
+    if old[i][-2:] == "\n\n":
+      break
+    new.append(old[i])
+    i = i + 3
+  return new
+
 def pool_set():
   pools = []
   import re
@@ -87,12 +96,7 @@ def pool_set():
   for field in responce:
     if len(field) > 1:
       pools.append(field)
-  i = 4
-  for a in range(len(pools) -1):
-    if pools[i] == "\n\n":
-      break
-    pool_list.append(pools[i])
-    i = i + 3
+  pool_list = pool_list_fix(pools)
   return pool_list
 
 def auto_get_pool_info():
@@ -102,12 +106,7 @@ def auto_get_pool_info():
     print('there are no storage pools; creating one..')
     vm_space = build_pool()
   pools = pool_set()
-  i = 4
-  for a in range(len(pools) -1):
-    if pools[i] == "\n\n":
-      break
-    pool_list.append(pools[i])
-    i = i + 3
+  pool_list = pool_list_fix(pools)
   if len(pool_list) > 1:
     print('There is more than one storage pool: ')
     for i in range(len(pool_list)):
