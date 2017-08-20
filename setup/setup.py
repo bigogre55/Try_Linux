@@ -48,7 +48,8 @@ def check_img():
 def extract_img():
   system('sudo gunzip -qf ' + vm_space + 'TryLinux_centos.img.gz')
   print('img has been extracted')
-  system('sudo virsh pool-refresh') 
+  e = pool_set()
+  system('sudo virsh pool-refresh ' + str(e)) 
 
 def refresh_pool(l):
   system('virsh pool-refresh --pool ' + str(l))
@@ -86,7 +87,13 @@ def pool_set():
   for field in responce:
     if len(field) > 1:
       pools.append(field)
-  return pools
+  i = 4
+  for a in range(len(pools) -1):
+    if pools[i] == "\n\n":
+      break
+    pool_list.append(pools[i])
+    i = i + 3
+  return pool_list
 
 def auto_get_pool_info():
   pool_list = []
@@ -210,7 +217,7 @@ else:
 #system('clear')
 input('Completed Sucsessfully! Press Enter to continue')
 space(2)
-refresh_now = False #testing without Download
+refresh_now = True #testing without Download
 vm_list = listdir(vm_space)
 if vm_list == []:
   print("You have no base images!")
@@ -228,6 +235,7 @@ else:
 
 if refresh_now == True:
   r = get_pool_name()
+  print('r is ' + str(r))
   refresh_pool(r)
 space(2)
 print("	all done")
