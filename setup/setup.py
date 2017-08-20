@@ -88,7 +88,7 @@ def pool_list_fix(old):
         break
     new.append(old[i])
     i = i + 3
-  print(new)
+  print('new in fix is ' + str(new))
   input()
   return new
 
@@ -100,7 +100,7 @@ def pool_set():
   for field in responce:
     if len(field) > 1:
       pools.append(field)
-  print(pools)
+  print('pools in pool_set are ' + str(pools))
   input()
   pool_list = pool_list_fix(pools)
   return pool_list
