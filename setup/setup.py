@@ -112,6 +112,8 @@ def auto_get_pool_info():
     vm_space = build_pool()
   pools = pool_set()
   pool_list = pool_list_fix(pools)
+  print(pool_list)
+  input()
   if len(pool_list) > 1:
     print('There is more than one storage pool: ')
     for i in range(len(pool_list)):
