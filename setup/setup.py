@@ -82,7 +82,7 @@ def get_storage_pool_info():
 def pool_list_fix(old):
   i = 4
   new = old
-  if not i >= len(old):
+  if not i > len(old):
     new = []
     for a in range(len(old) -1):
       if old[i][-2:] == "\n\n":
