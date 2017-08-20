@@ -81,7 +81,7 @@ def get_storage_pool_info():
 
 def pool_list_fix(old):
   i = 4
-  new[0] = old[0]
+#  new = old[0]
   if not i >= len(old):
     new = []
     for a in range(len(old) - 1):
@@ -143,6 +143,7 @@ def build_pool():
 def install_dep():
   subprocess.call(['sudo','apt','-y','install','php7.0','libvirt-bin','qemu-kvm','virtinst','bridge-utils','cpu-checker'])
 
+new = []
 #system('clear')
 space(1)
 print("This is the setup program for Try_Linux!")
@@ -196,17 +197,17 @@ print("Making Directory stucture and installing files")
 if vm_space[len(vm_space) - 1] != "/":
   vm_space += "/"
 if not path.isdir(vm_space + '.Try_Linux/config.d'):
-  system('sudo mkdir -p' + vm_space + '.Try_Linux/config.d')
+  system('sudo mkdir -p ' + vm_space + '.Try_Linux/config.d')
   print("Creating config.d directory")
 else:
   print("config.d dir is present")
 if not path.isdir(vm_space + '.Try_Linux/MID'):
-  system('sudo mkdir -p' + vm_space + '.Try_Linux/MID')
+  system('sudo mkdir -p ' + vm_space + '.Try_Linux/MID')
   print("Creating MID directory")
 else:
   print("MID dir is present")
 
-if not path.exists(vm_space + '../recycle.sh'):
+if not path.exists(vm_space + '.Try_Linux/recycle.sh'):
   copy('../vm_space/recycle.sh', vm_space + '.Try_Linux/')
   print("Copying recycle.sh to " + vm_space + '.Try_Linux/')
 else:
