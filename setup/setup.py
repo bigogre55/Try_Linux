@@ -82,7 +82,7 @@ def get_storage_pool_info():
 def pool_list_fix(old):
   i = 4
   for a in range(len(old) -1):
-    if old[i][-2:] == "\n\n":
+    if old[i][-2:] == "\n\n" or not old[i]:
       break
     new.append(old[i])
     i = i + 3
