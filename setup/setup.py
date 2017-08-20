@@ -88,6 +88,8 @@ def pool_list_fix(old):
         break
     new.append(old[i])
     i = i + 3
+  print(new)
+  input()
   return new
 
 def pool_set():
