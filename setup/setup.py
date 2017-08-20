@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from os import system,path,listdir,geteuid
-from shutil import move,copy
+from shutil import move,copy,copytree
 import gzip
 import subprocess
 import sys
@@ -60,7 +60,7 @@ def refresh_pool(l):
 def get_pool_name():
   vms = listdir(vm_space)
   for a in range(len(vms)):
-    input('get_pool_name last 4 are ' + vms[a][-4:])
+#    input('get_pool_name last 4 are ' + vms[a][-4:])
     if vms[a][-4:] == '.img':
       responce = subprocess.check_output('sudo virsh vol-pool ' + vm_space + vms[a], shell=True)
       responce = str(responce)
@@ -219,6 +219,7 @@ if not path.exists(vm_space + '.Try_Linux/recycle.sh'):
   print("Copying recycle.sh to " + vm_space + '.Try_Linux/')
 else:
   print("recycle.sh is present")
+
 if not path.exists('/etc/cron.d/Try_Linux'):
   print("Creating cron file")
   system('touch /etc/cron.d/Try_Linux')
