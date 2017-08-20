@@ -81,10 +81,10 @@ def get_storage_pool_info():
 
 def pool_list_fix(old):
   i = 4
-  new = old
-  if not i > len(old):
+  new = lst(old)
+  if not i >= len(old):
     new = []
-    for a in range(len(old) -1):
+    for a in range(len(old) - 1):
       if old[i][-2:] == "\n\n":
         break
     new.append(old[i])
@@ -195,20 +195,20 @@ else:
 print("Making Directory stucture and installing files")
 if vm_space[len(vm_space) - 1] != "/":
   vm_space += "/"
-if not path.isdir(vm_space + '../config.d'):
-  system('sudo mkdir ' + vm_space + '../config.d')
+if not path.isdir(vm_space + '.Try_Linux/config.d'):
+  system('sudo mkdir -p' + vm_space + '.Try_Linux/config.d')
   print("Creating config.d directory")
 else:
   print("config.d dir is present")
-if not path.isdir(vm_space + '../MID'):
-  system('sudo mkdir ' + vm_space + '../MID')
+if not path.isdir(vm_space + '.Try_Linux/MID'):
+  system('sudo mkdir -p' + vm_space + '.Try_Linux/MID')
   print("Creating MID directory")
 else:
   print("MID dir is present")
 
 if not path.exists(vm_space + '../recycle.sh'):
-  copy('../vm_space/recycle.sh', vm_space + '../')
-  print("Copying recycle.sh to " + vm_space)
+  copy('../vm_space/recycle.sh', vm_space + '.Try_Linux/')
+  print("Copying recycle.sh to " + vm_space + '.Try_Linux/')
 else:
   print("recycle.sh is present")
 if not path.exists('/etc/cron.d/Try_Linux'):
