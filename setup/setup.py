@@ -56,9 +56,11 @@ def refresh_pool(l):
 
 def get_pool_name():
   vms = listdir(vm_space)
-  responce = subprocess.check_output('sudo virsh vol-pool ' + vm_space + vms[0], shell=True)
-  responce = str(responce)
-  responce = responce[2:-5]
+  for a in range(len(vms) - 1):
+    if vms[a][-4:] == '.img':
+      responce = subprocess.check_output('sudo virsh vol-pool ' + vm_space + vms[a], shell=True)
+      responce = str(responce)
+      responce = responce[2:-5]
   return responce
 
 def get_storage_pool_info():
