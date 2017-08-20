@@ -80,6 +80,7 @@ def get_storage_pool_info():
     return(vm_space)
 
 def pool_list_fix(old):
+  new = []
   i = 4
   for a in range(len(old) -1):
     if not i >= len(old):
