@@ -82,7 +82,7 @@ def get_storage_pool_info():
 def pool_list_fix(old):
   i = 4
   print('first new is ' + str(new))
-#  new = old[0]
+  global new
   if not i >= len(old):
     new = []
     for a in range(len(old) - 1):
