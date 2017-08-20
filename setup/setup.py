@@ -51,7 +51,7 @@ def extract_img():
   e = pool_set()
   e = str(e)
   e = e[2:-2]
-  input('extract refresh pool is ' + e)
+#  input('extract refresh pool is ' + e)
   system('sudo virsh pool-refresh ' + str(e)) 
 
 def refresh_pool(l):
@@ -88,7 +88,7 @@ def get_storage_pool_info():
 def pool_list_fix(old):
   i = 4
 #  print('first new is ' + str(new))
-  global new
+#  global new
   if not i >= len(old):
     new = []
     for a in range(len(old) - 1):
@@ -150,7 +150,19 @@ def build_pool():
 def install_dep():
   subprocess.call(['sudo','apt','-y','install','php7.0','libvirt-bin','qemu-kvm','virtinst','bridge-utils','cpu-checker'])
 
-new = []
+def build_vars():
+  if not path.exists('../web/vars.php'):
+    print("Creating vars file")
+    system('touch ../web/vars.php')
+    with open("../web/vars.php", "w") as vars:
+      vars.write("<?php\n")
+      vars.write("//the directory for the virtual machine storage\n")
+      vars.write('$dir = \"' + vm_space + '\";\n')
+      vars.write("?>\n")
+  else:
+    print("vars file is present")
+
+global new = []
 #system('clear')
 space(1)
 print("This is the setup program for Try_Linux!")
@@ -254,8 +266,9 @@ else:
 
 if refresh_now == True:
   r = get_pool_name()
-  print('r is ' + str(r))
+#  print('r is ' + str(r))
   refresh_pool(r)
+build_vars()
 space(2)
 print("	all done")
 space(2)
