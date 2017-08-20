@@ -26,10 +26,10 @@ def get_img():
   deb_img = web.read()
   with open(vm_space + 'TryLinux_centos.img.gz', 'wb') as file:
     file.write(deb_img)
-  print('image has been downloaded; checking integrity..  ' + check_img())
-#  check_img()
-  print('Extracting image..   ' + extract_img()
-#  extract_img()
+  print('image has been downloaded; checking integrity..  ')
+  check_img()
+  print('Extracting image..   ')
+  extract_img()
 
 def check_img():
   import hashlib
