@@ -81,7 +81,7 @@ def get_storage_pool_info():
 
 def pool_list_fix(old):
   i = 4
-  new = lst(old)
+  new[0] = old[0]
   if not i >= len(old):
     new = []
     for a in range(len(old) - 1):
