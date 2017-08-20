@@ -49,6 +49,9 @@ def extract_img():
   system('sudo gunzip -qf ' + vm_space + 'TryLinux_centos.img.gz')
   print('img has been extracted')
   e = pool_set()
+  e = str(e)
+  e = e[2:-2]
+  input('extract refresh pool is ' + e)
   system('sudo virsh pool-refresh ' + str(e)) 
 
 def refresh_pool(l):
