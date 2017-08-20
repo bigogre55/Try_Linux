@@ -88,7 +88,7 @@ def pool_list_fix(old):
       if old[i][-2:] == "\n\n":
         b = 'y'
         break
-    if not b = 'y':
+    if not b == 'y':
       new.append(old[i])
       i = i + 3
   return new
