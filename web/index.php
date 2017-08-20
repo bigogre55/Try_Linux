@@ -34,7 +34,7 @@ $files = scandir($dir);
 //print_r($files);
 foreach ($files as $name) {
 	$name = basename($name, ".img");
-	if ($name == "." || $name == "..") {
+	if ($name[0] == ".") {
 		echo ""; //do nothing
 	} else {
 		echo "  <input type=\"radio\" name=\"dist\" value=\"$name\" checked>$name<br>\n";
