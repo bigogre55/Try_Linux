@@ -26,10 +26,10 @@ def get_img():
   deb_img = web.read()
   with open(vm_space + 'TryLinux_centos.img.gz', 'wb') as file:
     file.write(deb_img)
-  print('image has been downloaded; checking integrity..')
-  check_img()
-  print('img has been downloaded; extracting..')
-  extract_img()
+  print('image has been downloaded; checking integrity..  ' + check_img())
+#  check_img()
+  print('Extracting image..   ' + extract_img()
+#  extract_img()
 
 def check_img():
   import hashlib
@@ -56,7 +56,7 @@ def refresh_pool(l):
 
 def get_pool_name():
   vms = listdir(vm_space)
-  for a in range(len(vms) - 1):
+  for a in range(len(vms)):
     input('get_pool_name last 4 are ' + vms[a][-4:])
     if vms[a][-4:] == '.img':
       responce = subprocess.check_output('sudo virsh vol-pool ' + vm_space + vms[a], shell=True)
@@ -119,8 +119,8 @@ def auto_get_pool_info():
     vm_space = build_pool()
   pools = pool_set()
   pool_list = pool_list_fix(pools)
-  print(pool_list)
-  input()
+#  print(pool_list)
+#  input()
   if len(pool_list) > 1:
     print('There is more than one storage pool: ')
     for i in range(len(pool_list)):
