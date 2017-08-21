@@ -244,7 +244,9 @@ if path.exists(vm_space + '.Try_Linux/recycle.sh'):
 
 webdir = input('Where is your Web folder: ')
 if path.exists(webdir):
-  system('sudo chmod a+x ' + webdir + 'Try_Linux')
+  system('sudo mkdir -p ' + webdir + 'Try_Linux')
+  system('sudo cp -ru ../web/* ' + webdir + 'Try_Linux/')
+  system('sudo chmod a+x ' + webdir + 'Try_Linux/*')
 
 if not path.exists('/etc/cron.d/Try_Linux'):
   print("Creating cron file")
@@ -283,6 +285,13 @@ if refresh_now == True:
 #  print('r is ' + str(r))
   refresh_pool(r)
 build_vars()
+
+webdir = input('Where is your Web folder: ')
+if path.exists(webdir):
+  system('sudo mkdir -p ' + webdir + 'Try_Linux')
+  system('sudo cp -ru ../web/* ' + webdir + 'Try_Linux/')
+  system('sudo chmod a+x ' + webdir + 'Try_Linux/*')
+
 space(2)
 print("	all done")
 space(2)
