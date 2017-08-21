@@ -242,12 +242,6 @@ if path.isdir(vm_space + '.Try_Linux/config.d'):
 if path.exists(vm_space + '.Try_Linux/recycle.sh'):
   system('sudo chmod 776 ' + vm_space + '.Try_Linux')
 
-webdir = input('Where is your Web folder: ')
-if path.exists(webdir):
-  system('sudo mkdir -p ' + webdir + 'Try_Linux')
-  system('sudo cp -ru ../web/* ' + webdir + 'Try_Linux/')
-  system('sudo chmod a+x ' + webdir + 'Try_Linux/*')
-
 if not path.exists('/etc/cron.d/Try_Linux'):
   print("Creating cron file")
   system('touch /etc/cron.d/Try_Linux')
