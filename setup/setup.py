@@ -88,7 +88,7 @@ def get_storage_pool_info():
 def pool_list_fix(old):
   i = 4
 #  print('first new is ' + str(new))
-#  global new
+  global new
   if not i >= len(old):
     new = []
     for a in range(len(old) - 1):
@@ -162,7 +162,7 @@ def build_vars():
   else:
     print("vars file is present")
 
-global new = []
+new = []
 #system('clear')
 space(1)
 print("This is the setup program for Try_Linux!")
