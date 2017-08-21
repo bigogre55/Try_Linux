@@ -290,7 +290,9 @@ webdir = input('Where is your Web folder: ')
 if path.exists(webdir):
   system('sudo mkdir -p ' + webdir + 'Try_Linux')
   system('sudo cp -ru ../web/* ' + webdir + 'Try_Linux/')
-  system('sudo chmod a+x ' + webdir + 'Try_Linux/*')
+  system('sudo chmod 777 ' + webdir + 'Try_Linux/*')
+
+system('sudo chmod 777 ' + vm_space)
 
 space(2)
 print("	all done")
