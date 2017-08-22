@@ -234,13 +234,13 @@ else:
 
 #make folder permissions
 if path.isdir(vm_space + '.Try_Linux'):
-  system('sudo chmod 766 ' + vm_space + '.Try_Linux')
+  system('sudo chmod 777 ' + vm_space + '.Try_Linux')
 if path.isdir(vm_space + '.Try_Linux/MID'):
-  system('sudo chmod 766 ' + vm_space + '.Try_Linux')
+  system('sudo chmod 777 ' + vm_space + '.Try_Linux')
 if path.isdir(vm_space + '.Try_Linux/config.d'):
-  system('sudo chmod 766 ' + vm_space + '.Try_Linux')
+  system('sudo chmod 777 ' + vm_space + '.Try_Linux')
 if path.exists(vm_space + '.Try_Linux/recycle.sh'):
-  system('sudo chmod 776 ' + vm_space + '.Try_Linux')
+  system('sudo chmod 777 ' + vm_space + '.Try_Linux')
 
 if not path.exists('/etc/cron.d/Try_Linux'):
   print("Creating cron file")
