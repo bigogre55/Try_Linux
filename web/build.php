@@ -2,7 +2,7 @@
 include('vars.php');
 $name = $_GET['name'];
 $dist = $_GET['dist'];
-$host = $_SERVER['host'];
+$host = $_SERVER['HTTP_HOST'];
 shell_exec("./start.sh $name $dist");
 $new_build = shell_exec("php domain_build.php $name");
 file_put_contents("$dir.Try_Linux/config.d/$name.xml",$new_build);
