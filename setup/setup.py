@@ -236,11 +236,11 @@ else:
 if path.isdir(vm_space + '.Try_Linux'):
   system('sudo chmod 777 ' + vm_space + '.Try_Linux')
 if path.isdir(vm_space + '.Try_Linux/MID'):
-  system('sudo chmod 777 ' + vm_space + '.Try_Linux')
+  system('sudo chmod 777 ' + vm_space + '.Try_Linux/MID')
 if path.isdir(vm_space + '.Try_Linux/config.d'):
-  system('sudo chmod 777 ' + vm_space + '.Try_Linux')
+  system('sudo chmod 777 ' + vm_space + '.Try_Linux/config.d')
 if path.exists(vm_space + '.Try_Linux/recycle.sh'):
-  system('sudo chmod 777 ' + vm_space + '.Try_Linux')
+  system('sudo chmod 777 ' + vm_space + '.Try_Linux/recycle.sh')
 
 if not path.exists('/etc/cron.d/Try_Linux'):
   print("Creating cron file")
@@ -288,6 +288,7 @@ if not path.exists(webdir + 'Try_Linux'):
 
 system('sudo chmod 777 ' + vm_space)
 system('sudo chmod 777 ' + vm_space + '.Try_Linux')
+system('sudo chmod 777 ' + vm_space + '.Try_Linux/*')
 
 space(2)
 print("	all done")
