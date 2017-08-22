@@ -286,6 +286,7 @@ if not path.exists(webdir + 'Try_Linux'):
   system('sudo cp -ru ../web/* ' + webdir + 'Try_Linux/')
   system('sudo chmod 777 ' + webdir + 'Try_Linux/*')
 
+system('sudo chmod 777 ' + vm_space)
 system('sudo chmod 777 ' + vm_space + '.Try_Linux')
 
 space(2)
