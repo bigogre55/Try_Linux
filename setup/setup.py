@@ -51,7 +51,7 @@ def extract_img():
   e = pool_set()
   e = str(e)
   e = e[2:-2]
-  input('extract refresh pool is ' + e)
+#  input('extract refresh pool is ' + e)
   system('sudo virsh pool-refresh ' + str(e)) 
 
 def refresh_pool(l):
@@ -113,7 +113,7 @@ def pool_set():
   pool_list = pool_list_fix(pools)
   return pool_list
 
-def auto_get_pool_info():
+def auto_get_pool_info(w):
   pool_list = []
   pools = pool_set()
 #  if pools[len(pools) - 1] == '\n-------------------------------------------\n\n':
@@ -139,7 +139,12 @@ def auto_get_pool_info():
   responce = subprocess.check_output('virsh pool-dumpxml --pool ' + pool + ' | grep path', shell = True)
   responce = str(responce)
   vm_space = responce[12:-10]
-  return(vm_space)
+  if w == 'pool':
+    return(pool)
+  elif w == 'vm_space':
+    return(vm_space)
+  else:
+    print('bad call to auto_get_pool_info(). need to specify what var to retrieve. vm_space or pool')
 
 def build_pool():
   subprocess.call(['sudo','virsh','pool-define','../vm_space/new_pool.xml'])
@@ -149,6 +154,30 @@ def build_pool():
 
 def install_dep():
   subprocess.call(['sudo','apt','-y','install','php7.0','libvirt-bin','qemu-kvm','virtinst','bridge-utils','cpu-checker'])
+
+def build_vars():
+  if not path.exists('../web/vars.php'):
+    print("Creating vars file")
+    system('touch ../web/vars.php')
+    with open("../web/vars.php", "w") as vars:
+      vars.write("<?php\n")
+      vars.write("//the directory for the virtual machine storage\n")
+      vars.write('$dir = \"' + vm_space + '\";\n')
+      vars.write("?>\n")
+  else:
+    print("vars file is present")
+
+def build_start(pool):
+  if not path.exists('../web/start.sh'):
+    print("Creating start file")
+    system('touch ../web/start.sh')
+    with open("../web/start.sh", "w") as start:
+      start.write('#!/bin/bash\n')
+      start.write('name=$1\n')
+      start.write('dist=$2\n')
+      start.write('/usr/bin/virsh vol-clone $dist.img $name.img --pool ' + pool + ' > /dev/null 2>&1\n')
+  else:
+    print("start file is present")
 
 new = []
 #system('clear')
@@ -199,7 +228,7 @@ if install == False:
   space(1)
   vm_space = get_storage_pool_info()
 else:
-  vm_space = auto_get_pool_info()
+  vm_space = auto_get_pool_info('vm_space')
 print("Making Directory stucture and installing files")
 if vm_space[len(vm_space) - 1] != "/":
   vm_space += "/"
@@ -219,6 +248,16 @@ if not path.exists(vm_space + '.Try_Linux/recycle.sh'):
   print("Copying recycle.sh to " + vm_space + '.Try_Linux/')
 else:
   print("recycle.sh is present")
+
+#make folder permissions
+if path.isdir(vm_space + '.Try_Linux'):
+  system('sudo chmod 777 ' + vm_space + '.Try_Linux')
+if path.isdir(vm_space + '.Try_Linux/MID'):
+  system('sudo chmod 777 ' + vm_space + '.Try_Linux/MID')
+if path.isdir(vm_space + '.Try_Linux/config.d'):
+  system('sudo chmod 777 ' + vm_space + '.Try_Linux/config.d')
+if path.exists(vm_space + '.Try_Linux/recycle.sh'):
+  system('sudo chmod 777 ' + vm_space + '.Try_Linux/recycle.sh')
 
 if not path.exists('/etc/cron.d/Try_Linux'):
   print("Creating cron file")
@@ -254,8 +293,22 @@ else:
 
 if refresh_now == True:
   r = get_pool_name()
-  print('r is ' + str(r))
+#  print('r is ' + str(r))
   refresh_pool(r)
+
+build_vars()
+build_start(r)
+
+webdir = input('Where is your Web folder: ')
+if not path.exists(webdir + 'Try_Linux'):
+  system('sudo mkdir -p ' + webdir + 'Try_Linux')
+  system('sudo cp -ru ../web/* ' + webdir + 'Try_Linux/')
+  system('sudo chmod 777 ' + webdir + 'Try_Linux/*')
+
+system('sudo chmod 777 ' + vm_space)
+system('sudo chmod 777 ' + vm_space + '.Try_Linux')
+system('sudo chmod 777 ' + vm_space + '.Try_Linux/*')
+
 space(2)
 print("	all done")
 space(2)
