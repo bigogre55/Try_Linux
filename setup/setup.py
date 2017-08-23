@@ -162,6 +162,18 @@ def build_vars():
   else:
     print("vars file is present")
 
+def build_start():
+  if not path.exists('../web/start.sh'):
+    print("Creating start file")
+    system('touch ../web/start.sh')
+    with open("../web/start.sh", "w") as vars:
+      start.write('#!/bin/bash\n')
+      start.write('name=$1\n')
+      start.write('dist=$2\n')
+      start.write('/usr/bin/virsh vol-clone $dist.img $name.img --pool ' + pool + ' > /dev/null 2>&1\n')
+  else:
+    print("start file is present")
+
 new = []
 #system('clear')
 space(1)

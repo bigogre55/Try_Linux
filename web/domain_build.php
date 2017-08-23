@@ -1,5 +1,6 @@
 <?php
 $name = $argv[1];
+include('vars.php');
 echo "<domain type='kvm'>\n";
 echo "  <name>$name</name>\n";
 echo "  <memory unit='KiB'>1048576</memory>\n";
@@ -35,7 +36,7 @@ echo "  <devices>\n";
 echo "    <emulator>/usr/bin/kvm-spice</emulator>\n";
 echo "    <disk type='file' device='disk'>\n";
 echo "      <driver name='qemu' type='qcow2'/>\n";
-echo "      <source file='/srv/storage/virtual_machines/base_images/$name.img'/>\n";
+echo "      <source file='$dir$name.img'/>\n";
 echo "      <backingStore/>\n";
 echo "      <target dev='vda' bus='virtio'/>\n";
 echo "      <alias name='virtio-disk0'/>\n";
