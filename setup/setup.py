@@ -290,7 +290,9 @@ if refresh_now == True:
   r = get_pool_name()
 #  print('r is ' + str(r))
   refresh_pool(r)
+
 build_vars()
+build_start()
 
 webdir = input('Where is your Web folder: ')
 if not path.exists(webdir + 'Try_Linux'):
