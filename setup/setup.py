@@ -166,7 +166,7 @@ def build_start():
   if not path.exists('../web/start.sh'):
     print("Creating start file")
     system('touch ../web/start.sh')
-    with open("../web/start.sh", "w") as vars:
+    with open("../web/start.sh", "w") as start:
       start.write('#!/bin/bash\n')
       start.write('name=$1\n')
       start.write('dist=$2\n')
