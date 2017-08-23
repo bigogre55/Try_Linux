@@ -113,7 +113,7 @@ def pool_set():
   pool_list = pool_list_fix(pools)
   return pool_list
 
-def auto_get_pool_info():
+def auto_get_pool_info(w):
   pool_list = []
   pools = pool_set()
 #  if pools[len(pools) - 1] == '\n-------------------------------------------\n\n':
@@ -139,7 +139,12 @@ def auto_get_pool_info():
   responce = subprocess.check_output('virsh pool-dumpxml --pool ' + pool + ' | grep path', shell = True)
   responce = str(responce)
   vm_space = responce[12:-10]
-  return(vm_space)
+  if w == 'pool':
+    return(pool)
+  elif w == 'vm_space':
+    return(vm_space)
+  else:
+    print('bad call to auto_get_pool_info(). need to specify what var to retrieve. vm_space or pool')
 
 def build_pool():
   subprocess.call(['sudo','virsh','pool-define','../vm_space/new_pool.xml'])
@@ -162,7 +167,7 @@ def build_vars():
   else:
     print("vars file is present")
 
-def build_start():
+def build_start(pool):
   if not path.exists('../web/start.sh'):
     print("Creating start file")
     system('touch ../web/start.sh')
@@ -223,7 +228,7 @@ if install == False:
   space(1)
   vm_space = get_storage_pool_info()
 else:
-  vm_space = auto_get_pool_info()
+  vm_space = auto_get_pool_info('vm_space')
 print("Making Directory stucture and installing files")
 if vm_space[len(vm_space) - 1] != "/":
   vm_space += "/"
@@ -292,7 +297,7 @@ if refresh_now == True:
   refresh_pool(r)
 
 build_vars()
-build_start()
+build_start(r)
 
 webdir = input('Where is your Web folder: ')
 if not path.exists(webdir + 'Try_Linux'):
