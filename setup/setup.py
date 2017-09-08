@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+#
+#	Imports
+#
+
 from os import system,path,listdir,geteuid
 from shutil import move,copy,copytree
 import gzip
@@ -7,10 +11,16 @@ import subprocess
 import sys
 import urllib.request
 
+#
+#	Functions
+#
+
+#used for output formatting
 def space(n):
   for i in range(n):
     print("")
 
+#needs root access to install files and setup folders
 def sudo_check():
   if geteuid() == 0:
     print("We're Root!")
@@ -20,6 +30,7 @@ def sudo_check():
     subprocess.call(['/usr/bin/sudo', './setup.py'])
     exit(1)
 
+#Download a base image for a fresh install of libvirt
 def get_img():
   print('Downloading CentOS base image..')
   web = urllib.request.urlopen('https://s3-us-west-2.amazonaws.com/jacobjeffers/git/TryLinux_centos.img.gz')
@@ -31,13 +42,12 @@ def get_img():
   print('Extracting image..   ')
   extract_img()
 
+#check integrity of downloaded image
 def check_img():
   import hashlib
   new_md5 = hashlib.md5(open(vm_space + 'TryLinux_centos.img.gz', 'rb').read()).hexdigest()
   new_md5 = str(new_md5)
   old_md5 = 'f3e3bd285dbc727848991917e2e9a8c1'
-#  print(new_md5)
-#  print(old_md5)
   if old_md5 == new_md5:
     print('The image is good')
   else:
@@ -45,28 +55,30 @@ def check_img():
     system('rm -f ' + vmspace + 'TryLinux_centos.img.gz')
     get_img()
 
+#extract the image to the Storage pool
 def extract_img():
   system('sudo gunzip -qf ' + vm_space + 'TryLinux_centos.img.gz')
   print('img has been extracted')
   e = pool_set()
   e = str(e)
   e = e[2:-2]
-#  input('extract refresh pool is ' + e)
-  system('sudo virsh pool-refresh ' + str(e)) 
+  refresh_pool(e)
 
+#refresh the libvirt storage pool
 def refresh_pool(l):
   system('virsh pool-refresh --pool ' + str(l))
 
+#get the storage pool name from the directory
 def get_pool_name():
   vms = listdir(vm_space)
   for a in range(len(vms)):
-#    input('get_pool_name last 4 are ' + vms[a][-4:])
     if vms[a][-4:] == '.img':
       responce = subprocess.check_output('sudo virsh vol-pool ' + vm_space + vms[a], shell=True)
       responce = str(responce)
       responce = responce[2:-5]
   return responce
 
+#get the storage pool directory from the user
 def get_storage_pool_info():
   vm_space = input("Where is your VM storage pool: ")
   exist_check = path.exists(vm_space)
@@ -85,9 +97,9 @@ def get_storage_pool_info():
     print("	OK!!")
     return(vm_space)
 
+#format the pool list from STOUT to a list
 def pool_list_fix(old):
   i = 4
-#  print('first new is ' + str(new))
   global new
   if not i >= len(old):
     new = []
@@ -96,10 +108,9 @@ def pool_list_fix(old):
         break
     new.append(old[i])
     i = i + 3
-#  print('new in fix is ' + str(new))
-#  input()
   return new
 
+#get a list of the current storage pools
 def pool_set():
   pools = []
   import re
@@ -108,22 +119,19 @@ def pool_set():
   for field in responce:
     if len(field) > 1:
       pools.append(field)
-#  print('pools in pool_set are ' + str(pools))
-#  input()
   pool_list = pool_list_fix(pools)
   return pool_list
 
+#get the storage pool directory info automatically
+#can return either a pool name or the pool space
 def auto_get_pool_info(w):
   pool_list = []
   pools = pool_set()
-#  if pools[len(pools) - 1] == '\n-------------------------------------------\n\n':
   if not pools:
     print('there are no storage pools; creating one..')
     vm_space = build_pool()
   pools = pool_set()
   pool_list = pool_list_fix(pools)
-#  print(pool_list)
-#  input()
   if len(pool_list) > 1:
     print('There is more than one storage pool: ')
     for i in range(len(pool_list)):
@@ -146,15 +154,18 @@ def auto_get_pool_info(w):
   else:
     print('bad call to auto_get_pool_info(). need to specify what var to retrieve. vm_space or pool')
 
+#create a new pool for a fresh install
 def build_pool():
   subprocess.call(['sudo','virsh','pool-define','../vm_space/new_pool.xml'])
   subprocess.call(['sudo','virsh','pool-start','TryLinux_images'])
   subprocess.call(['sudo','virsh','pool-autostart','TryLinux_images'])
 
 
+#install all dependecies
 def install_dep():
   subprocess.call(['sudo','apt','-y','install','php7.0','libvirt-bin','qemu-kvm','virtinst','bridge-utils','cpu-checker'])
 
+#build the vars file from the storage pool info
 def build_vars():
   if not path.exists('../web/vars.php'):
     print("Creating vars file")
@@ -167,6 +178,7 @@ def build_vars():
   else:
     print("vars file is present")
 
+# build the start.sh file with storage pool info
 def build_start(pool):
   if not path.exists('../web/start.sh'):
     print("Creating start file")
@@ -179,8 +191,16 @@ def build_start(pool):
   else:
     print("start file is present")
 
+
+#
+# 	Start the main program
+#
+
+#initialize global variable and get the screen ready for viewing
 new = []
-#system('clear')
+system('clear')
+
+#introduce yourself and make sure we are running as root
 space(1)
 print("This is the setup program for Try_Linux!")
 space(1)
@@ -190,7 +210,10 @@ print("	I will be check for admin privileges now.")
 space(2)
 input("Press Enter to continue.")
 sudo_check()
-#system('clear')
+system('clear')
+
+#check for and install all dependencies for libvirt
+space(2)
 print("Checking dependencies...")
 dep = 0
 install = False
@@ -207,13 +230,20 @@ while(dep < 1):
     if install == "y" or install == "Y":
       install_dep()
       dep = dep + 1
+    else:
+      print("	This program cannot run without these dependencies")
+      print("	Exiting.....")
+      exit(1)
   else:
     space(5)
     print("	Check Passed! Moving on")
     dep = dep + 1
 space(1)
 input("Press Enter when you're ready to begin!")
-#system('clear')
+system('clear')
+
+#gather all information about where the install will be
+
 space(5)
 if install == False:
   print("	The VM storage pool is where the images that libvirt")
@@ -229,6 +259,9 @@ if install == False:
   vm_space = get_storage_pool_info()
 else:
   vm_space = auto_get_pool_info('vm_space')
+
+#create and move files to their home directories
+
 print("Making Directory stucture and installing files")
 if vm_space[len(vm_space) - 1] != "/":
   vm_space += "/"
@@ -259,6 +292,7 @@ if path.isdir(vm_space + '.Try_Linux/config.d'):
 if path.exists(vm_space + '.Try_Linux/recycle.sh'):
   system('sudo chmod 777 ' + vm_space + '.Try_Linux/recycle.sh')
 
+#create a cronjob for cleaning up old VM's and config files
 if not path.exists('/etc/cron.d/Try_Linux'):
   print("Creating cron file")
   system('touch /etc/cron.d/Try_Linux')
@@ -271,10 +305,12 @@ if not path.exists('/etc/cron.d/Try_Linux'):
     cron.write("*/5 * * * * root /srv/storage/virtual_machines/recycle.sh" + "\n")
 else:
   print("cron file is present")
-#system('clear')
 input('Completed Sucsessfully! Press Enter to continue')
+system('clear')
+
+#setup the storage pool with an image if there isn't one
 space(2)
-refresh_now = True #testing without Download
+refresh_now = True #testing without Download change back to False before running for real
 vm_list = listdir(vm_space)
 if vm_list == []:
   print("You have no base images!")
@@ -291,15 +327,20 @@ else:
     get_img()
     refresh_now = True
 
+#if the image was downloaded refresh to pool so it is available
 if refresh_now == True:
   r = get_pool_name()
-#  print('r is ' + str(r))
   refresh_pool(r)
 
+#create dynamic files with storage pool info
 build_vars()
 build_start(r)
 
+#get information about the web directory
+system('clear')
 webdir = input('Where is your Web folder: ')
+
+#copy all files from the web folder to the live site
 if not path.exists(webdir + 'Try_Linux'):
   system('sudo mkdir -p ' + webdir + 'Try_Linux')
   system('sudo cp -ru ../web/* ' + webdir + 'Try_Linux/')
