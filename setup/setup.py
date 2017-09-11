@@ -27,6 +27,7 @@ def sudo_check():
     print("Moving on...")
   else:
     print("We're not Root")
+    print("Restarting setup.py as root...")
     subprocess.call(['/usr/bin/sudo', './setup.py'])
     exit(1)
 
@@ -204,10 +205,6 @@ system('clear')
 space(1)
 print("This is the setup program for Try_Linux!")
 space(1)
-print("	This setup program needs root access to install")
-print("	and setup all necissary files.")
-print("	I will be check for admin privileges now.")
-space(2)
 input("Press Enter to continue.")
 sudo_check()
 system('clear')
@@ -284,13 +281,13 @@ else:
 
 #make folder permissions
 if path.isdir(vm_space + '.Try_Linux'):
-  system('sudo chmod 777 ' + vm_space + '.Try_Linux')
+  system('sudo chmod 755 ' + vm_space + '.Try_Linux')
 if path.isdir(vm_space + '.Try_Linux/MID'):
-  system('sudo chmod 777 ' + vm_space + '.Try_Linux/MID')
+  system('sudo chmod 755 ' + vm_space + '.Try_Linux/MID')
 if path.isdir(vm_space + '.Try_Linux/config.d'):
-  system('sudo chmod 777 ' + vm_space + '.Try_Linux/config.d')
+  system('sudo chmod 755 ' + vm_space + '.Try_Linux/config.d')
 if path.exists(vm_space + '.Try_Linux/recycle.sh'):
-  system('sudo chmod 777 ' + vm_space + '.Try_Linux/recycle.sh')
+  system('sudo chmod 755 ' + vm_space + '.Try_Linux/recycle.sh')
 
 #create a cronjob for cleaning up old VM's and config files
 if not path.exists('/etc/cron.d/Try_Linux'):
@@ -344,11 +341,11 @@ webdir = input('Where is your Web folder: ')
 if not path.exists(webdir + 'Try_Linux'):
   system('sudo mkdir -p ' + webdir + 'Try_Linux')
   system('sudo cp -ru ../web/* ' + webdir + 'Try_Linux/')
-  system('sudo chmod 777 ' + webdir + 'Try_Linux/*')
+  system('sudo chmod 755 ' + webdir + 'Try_Linux/*')
 
-system('sudo chmod 777 ' + vm_space)
-system('sudo chmod 777 ' + vm_space + '.Try_Linux')
-system('sudo chmod 777 ' + vm_space + '.Try_Linux/*')
+system('sudo chmod 755 ' + vm_space)
+system('sudo chmod 755 ' + vm_space + '.Try_Linux')
+system('sudo chmod 755 ' + vm_space + '.Try_Linux/*')
 
 space(2)
 print("	all done")
