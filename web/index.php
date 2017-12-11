@@ -36,6 +36,8 @@ foreach ($files as $name) {
 	$name = basename($name, ".img");
 	if ($name[0] == ".") {
 		echo ""; //do nothing
+	} elseif ($name[0] == "t") {
+                echo ""; //do nothing
 	} else {
 		echo "  <input type=\"radio\" name=\"dist\" value=\"$name\" checked>$name<br>\n";
 	}

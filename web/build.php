@@ -1,6 +1,7 @@
 <?php
 include('vars.php');
 $name = $_GET['name'];
+$name = "t-" . $name;
 $dist = $_GET['dist'];
 $host = $_SERVER['HTTP_HOST'];
 shell_exec("./start.sh $name $dist");
